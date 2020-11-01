@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
         // This makes the visual density adapt to the platform that you run
         // the app on. For desktop platforms, the controls will be smaller and
         // closer together (more dense) than on mobile platforms.
@@ -50,16 +50,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-   List<String> elements = [];
-
-  var map = {};
+  final myController = TextEditingController();
+  List<String> elements = [];
+  var map;
   var number = [];
   var count = [];
 
-void _addNumber(val) {
-    map = {};
-    setState(() {    
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    myController.dispose();
+    super.dispose();
+  }
 
+  void _addNumber(val) {
+    map = {};
+    setState(() {
       elements.add(val);
       elements.forEach((element) {
         if (!map.containsKey(element)) {
@@ -77,38 +83,75 @@ void _addNumber(val) {
     });
   }
 
-     @override
+  @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      appBar:  AppBar(
-        title:  Text("Hi flutter"),
-      ),
-      body: Row(
-     
-   mainAxisAlignment: MainAxisAlignment.spaceAround,
-  children: <Widget>[
-  Container(
-  margin: const EdgeInsets.only(top: 20.0, left: 10.0),              
-  width: 300.0,
-  child: TextField(
-  obscureText: false,
-  decoration: InputDecoration(
-    border: OutlineInputBorder(),
-    labelText: '',
-  ),
-)
-),
-  Container(  
-  margin: const EdgeInsets.only(top: 20.0),             
-  width: 50.0,
-  child: FloatingActionButton(
-        onPressed: () => _addNumber('B'),
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ))
-
-  ],
-),
-    );
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Hi flutter"),
+        ),
+        body: SafeArea(
+          child: ListView(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Container(
+                      margin: const EdgeInsets.only(top: 20.0, left: 10.0),
+                      width: 300.0,
+                      child: TextField(
+                        controller: myController,
+                        obscureText: false,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: '',
+                        ),
+                        style: TextStyle(fontSize: 25))),
+                  Container(
+                      margin: const EdgeInsets.only(top: 20.0),
+                      width: 50.0,
+                      child: FloatingActionButton(
+                        onPressed: () => _addNumber(myController.text),
+                        tooltip: 'Increment',
+                        child: Icon(Icons.add),
+                      )),
+                ],
+              ),
+               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.only(top: 20.0),
+                    width: 100.0,
+                    child: Text("Items",style: TextStyle(fontSize: 25))),
+                    Container(
+                    margin: const EdgeInsets.only(top: 20.0),
+                    width: 100.0,
+                    child: Text("Amount",style: TextStyle(fontSize: 25))
+                             
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.only(top: 20.0),
+                    width: 100.0,
+                    child: Column(
+                        children: number.map((i) => new Text(i.toString(),
+                              style: TextStyle(fontSize: 30))).toList()),
+                  ),
+                    Container(
+                    margin: const EdgeInsets.only(left:100,top: 20.0),
+                    width: 100.0,
+                    child: Column(
+                        children: count.map((i) => new Text(i.toString(),
+                                style: TextStyle(fontSize: 30))).toList()),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ));
   }
-  }
+}
