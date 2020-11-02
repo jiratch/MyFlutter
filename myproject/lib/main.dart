@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.red,
+        primarySwatch: Colors.blue,
         // This makes the visual density adapt to the platform that you run
         // the app on. For desktop platforms, the controls will be smaller and
         // closer together (more dense) than on mobile platforms.
@@ -62,7 +62,28 @@ class _MyHomePageState extends State<MyHomePage> {
     myController.dispose();
     super.dispose();
   }
+  
+  void _removeItem(item){
+    print(item);
+     setState(() {
+        
+        print(elements);
+        elements.remove(item);
+        print(elements);
+               
+          map[item] -= 1;    
 
+     final filteredMap = Map.from(map)..removeWhere((k, v) => v==0);  
+      map = filteredMap;
+      number = map.keys.toList();
+      print(number);
+      count = map.values.toList();
+      print(count);
+
+  
+
+     });
+  }
   void _addNumber(val) {
     map = {};
     setState(() {
@@ -75,11 +96,9 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       });
 
-      print("map = $map");
       number = map.keys.toList();
       count = map.values.toList();
-      print("number = $number");
-      print("newcount = $count");
+      myController.text = '';
     });
   }
 
@@ -99,36 +118,39 @@ class _MyHomePageState extends State<MyHomePage> {
                       margin: const EdgeInsets.only(top: 20.0, left: 10.0),
                       width: 300.0,
                       child: TextField(
-                        controller: myController,
-                        obscureText: false,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: '',
-                        ),
-                        style: TextStyle(fontSize: 25))),
+                          controller: myController,
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: '',
+                          ),
+                          style: TextStyle(fontSize: 25))),
                   Container(
                       margin: const EdgeInsets.only(top: 20.0),
                       width: 50.0,
                       child: FloatingActionButton(
                         onPressed: () => _addNumber(myController.text),
+                        backgroundColor: Colors.green,
                         tooltip: 'Increment',
                         child: Icon(Icons.add),
                       )),
                 ],
               ),
-               Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   Container(
-                    margin: const EdgeInsets.only(top: 20.0),
-                    width: 100.0,
-                    child: Text("Items",style: TextStyle(fontSize: 25))),
-                    Container(
-                    margin: const EdgeInsets.only(top: 20.0),
-                    width: 100.0,
-                    child: Text("Amount",style: TextStyle(fontSize: 25))
-                             
-                  )
+                      margin: const EdgeInsets.only(top: 20.0),
+                      width: 100.0,
+                      child: Text("Items", style: TextStyle(fontSize: 25))),
+                  Container(
+                      margin: const EdgeInsets.only(top: 20.0),
+                      width: 100.0,
+                      child: Text("Amount", style: TextStyle(fontSize: 25))),
+                  Container(
+                      margin: const EdgeInsets.only(top: 20.0),
+                      width: 100.0,
+                      child: Text("", style: TextStyle(fontSize: 25)))
                 ],
               ),
               Row(
@@ -136,18 +158,49 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: <Widget>[
                   Container(
                     margin: const EdgeInsets.only(top: 20.0),
-                    width: 100.0,
+                    width: 70.0,
                     child: Column(
-                        children: number.map((i) => new Text(i.toString(),
-                              style: TextStyle(fontSize: 30))).toList()),
+                    
+                     children: number.map((item) {
+                      return DropdownMenuItem(
+                        child: Text(item.toString(),
+                            style: TextStyle(fontSize: 25)),
+                      );
+                    }).toList()),
                   ),
-                    Container(
-                    margin: const EdgeInsets.only(left:100,top: 20.0),
-                    width: 100.0,
+                  Container(
+                    margin: const EdgeInsets.only(left: 50, top: 20.0),
+                    width: 50.0,
                     child: Column(
-                        children: count.map((i) => new Text(i.toString(),
-                                style: TextStyle(fontSize: 30))).toList()),
-                  )
+                    
+                     children: count.map((item) { 
+                     return DropdownMenuItem(
+                        child: Text(item.toString(),
+                            style: TextStyle(fontSize: 25)),
+                      );
+
+                    }).toList()
+                    
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 50, top: 20.0),
+                    width: 50.0,
+                    child: Column(
+                        children: number.map((item) {
+                      return DropdownMenuItem(
+                        child: IconButton(
+                          onPressed: ()=> _removeItem(item),
+                          icon:Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                          size: 30.0,
+                        )),
+                      
+                      );
+                    }).toList()),
+                   
+                  ),
                 ],
               ),
             ],
